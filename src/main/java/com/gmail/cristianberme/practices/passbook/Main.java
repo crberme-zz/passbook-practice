@@ -63,6 +63,7 @@ public class Main {
         barcode.setMessageEncoding("iso-8859-1");
         pass.setBarcodes(Collections.singletonList(barcode));
         pass.setBarcode(barcode);
+        pass.setIgnoresTimeZone(false);
 
         GenericPass generic = new GenericPass();
         Map<String, Object> primaryField = new HashMap<>();
@@ -72,7 +73,7 @@ public class Main {
         pass.setGeneric(generic);
 
         File passJson = new File(passFolder.getAbsolutePath() + File.separator + "pass.json");
-        jsonMapper.writeValue(new FileOutputStream(passJson), pass);
+        jsonMapper.writerWithDefaultPrettyPrinter().writeValue(new FileOutputStream(passJson), pass);
 
         // Create the manifest.json
         Map<String, String> manifest = new HashMap<>();
@@ -81,7 +82,7 @@ public class Main {
         }
 
         File manifestJson = new File(passFolder.getAbsolutePath() + File.separator + "manifest.json");
-        jsonMapper.writeValue(new FileOutputStream(manifestJson), manifest);
+        jsonMapper.writerWithDefaultPrettyPrinter().writeValue(new FileOutputStream(manifestJson), manifest);
 
         // Create the signature file
         File signatureFile = new File(passFolder.getAbsolutePath() + File.separator + "signature");
@@ -114,7 +115,7 @@ public class Main {
 
     private static String getSHA1Hash(final File file) throws NoSuchAlgorithmException, IOException {
         MessageDigest digest = MessageDigest.getInstance("SHA1");
-        return DatatypeConverter.printHexBinary(digest.digest(IOUtils.toByteArray(new FileInputStream(file))));
+        return DatatypeConverter.printHexBinary(digest.digest(IOUtils.toByteArray(new FileInputStream(file)))).toUpperCase();
     }
 
     private static byte[] getSignature(final File manifestFile, final File keyStoreFile, final File certFile,
