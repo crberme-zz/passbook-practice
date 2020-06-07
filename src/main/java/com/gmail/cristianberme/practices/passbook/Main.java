@@ -31,16 +31,16 @@ public class Main {
         properties.load(new FileInputStream("src/main/resources/pass.properties"));
         String serialNumber = UUID.randomUUID().toString();
 
+        Barcode barcode = new Barcode(BarcodeFormat.QR, "https://github.com/crberme")
+                .messageEncoding("iso-8859-1");
         Pass pass = new Pass()
                 .passTypeIdentifier(properties.getProperty("pass.passTypeIdentifier"))
                 .serialNumber(serialNumber)
                 .teamIdentifier(properties.getProperty("pass.teamIdentifier"))
                 .description("Passbook practice")
                 .organizationName("Practice")
-                .barcodes(
-                        new Barcode(BarcodeFormat.QR, "https://github.com/crberme")
-                                .messageEncoding("iso-8859-1")
-                )
+                .barcodes(barcode)
+                .barcode(barcode)
                 .passInformation(
                         new Generic()
                                 .primaryFields(
