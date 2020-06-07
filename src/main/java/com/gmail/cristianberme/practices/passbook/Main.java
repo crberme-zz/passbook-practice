@@ -14,12 +14,15 @@ import com.ryantenney.passkit4j.sign.PassSigningException;
 
 import java.io.*;
 import java.net.URL;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.util.Properties;
 import java.util.UUID;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException, PassSigningException {
+    public static void main(String[] args) throws IOException, PassSigningException, CertificateException {
         // Create a file called "pass.properties" in the resources folder and include the following keys:
         //      - pass.passTypeIdentifier       : The pass type ID's name, generated on Apple's developer portal
         //      - pass.teamIdentifier           : The team ID associated with your developer account
@@ -51,9 +54,11 @@ public class Main {
 
         String password = properties.getProperty("keystore.password");
         // Copy the .p12 file generated from the pass type ID certificate in the resources folder as "keystore.p12"
+        // Also copy the certificate itself as "pass.cer"
         // The following code implies that the keystore and the private key share the same password
         // If that's not the case change the following instructions accordingly
         PassSigner signer = PassSignerImpl.builder()
+                .signingCertificate((X509Certificate) CertificateFactory.getInstance("X.509").generateCertificate(new FileInputStream("src/main/resources/pass.cer")))
                 .intermediateCertificate(new URL("https://developer.apple.com/certificationauthority/AppleWWDRCA.cer").openStream())
                 .keystore(new FileInputStream("src/main/resources/keystore.p12"), password)
                 .password(password)
