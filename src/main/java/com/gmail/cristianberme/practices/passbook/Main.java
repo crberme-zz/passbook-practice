@@ -131,7 +131,7 @@ public class Main {
         CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509", BouncyCastleProvider.PROVIDER_NAME);
         X509Certificate intermediateCertificate = (X509Certificate) certificateFactory
                 .generateCertificate(new URL("https://developer.apple.com/certificationauthority/AppleWWDRCA.cer").openStream());
-        X509Certificate certificate = (X509Certificate) certificateFactory.generateCertificate(new FileInputStream(certFile));
+        X509Certificate signingCertificate = (X509Certificate) certificateFactory.generateCertificate(new FileInputStream(certFile));
 
         // Load the private key
         KeyStore keyStore = KeyStore.getInstance("PKCS12");
@@ -142,10 +142,10 @@ public class Main {
         CMSSignedDataGenerator dataGenerator = new CMSSignedDataGenerator();
         dataGenerator.addSignerInfoGenerator(new JcaSimpleSignerInfoGeneratorBuilder()
                 .setProvider(BouncyCastleProvider.PROVIDER_NAME)
-                .build("SHA1withRSA", key, IOUtils.toByteArray(new FileInputStream(certFile))));
-        dataGenerator.addCertificates(new JcaCertStore(Arrays.asList(intermediateCertificate, certificate)));
+                .build("SHA1withRSA", key, signingCertificate));
+        dataGenerator.addCertificates(new JcaCertStore(Arrays.asList(intermediateCertificate, signingCertificate)));
 
-        CMSTypedData typedData = new CMSProcessableByteArray(IOUtils.toByteArray(new FileInputStream(manifestFile)));
+        CMSProcessableByteArray typedData = new CMSProcessableByteArray(IOUtils.toByteArray(new FileInputStream(manifestFile)));
 
         CMSSignedData data = dataGenerator.generate(typedData);
         return data.getEncoded();
