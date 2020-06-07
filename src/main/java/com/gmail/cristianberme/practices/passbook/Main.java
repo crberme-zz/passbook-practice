@@ -127,7 +127,7 @@ public class Main {
         BouncyCastleProvider provider = new BouncyCastleProvider();
         Security.addProvider(provider);
 
-        // Load the intermediate certificate
+        // Load the certificates
         CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509", BouncyCastleProvider.PROVIDER_NAME);
         X509Certificate intermediateCertificate = (X509Certificate) certificateFactory
                 .generateCertificate(new URL("https://developer.apple.com/certificationauthority/AppleWWDRCA.cer").openStream());
