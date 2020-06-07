@@ -115,7 +115,7 @@ public class Main {
 
     private static String getSHA1Hash(final File file) throws NoSuchAlgorithmException, IOException {
         MessageDigest digest = MessageDigest.getInstance("SHA1");
-        return DatatypeConverter.printHexBinary(digest.digest(IOUtils.toByteArray(new FileInputStream(file)))).toUpperCase();
+        return DatatypeConverter.printHexBinary(digest.digest(IOUtils.toByteArray(new FileInputStream(file)))).toLowerCase();
     }
 
     private static byte[] getSignature(final File manifestFile, final File keyStoreFile, final File certFile,
