@@ -15,9 +15,8 @@ public class Pass {
     private GenericPass generic;
     private List<Barcode> barcodes;
     private Barcode barcode;
-    private boolean ignoresTimeZone;
 
-    public Pass(String description, Integer formatVersion, String organizationName, String passTypeIdentifier, String serialNumber, String teamIdentifier, GenericPass generic, List<Barcode> barcodes, Barcode barcode, boolean ignoresTimeZone) {
+    public Pass(String description, Integer formatVersion, String organizationName, String passTypeIdentifier, String serialNumber, String teamIdentifier, GenericPass generic, List<Barcode> barcodes, Barcode barcode) {
         this.description = description;
         this.formatVersion = formatVersion;
         this.organizationName = organizationName;
@@ -27,7 +26,6 @@ public class Pass {
         this.generic = generic;
         this.barcodes = barcodes;
         this.barcode = barcode;
-        this.ignoresTimeZone = ignoresTimeZone;
     }
 
     public Pass() {
@@ -105,11 +103,4 @@ public class Pass {
         this.barcode = barcode;
     }
 
-    public boolean isIgnoresTimeZone() {
-        return ignoresTimeZone;
-    }
-
-    public void setIgnoresTimeZone(boolean ignoresTimeZone) {
-        this.ignoresTimeZone = ignoresTimeZone;
-    }
 }

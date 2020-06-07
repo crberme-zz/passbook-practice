@@ -8,12 +8,13 @@ import com.gmail.cristianberme.practices.passbook.models.visuals.Barcode;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.bouncycastle.cert.jcajce.JcaCertStore;
-import org.bouncycastle.cms.*;
+import org.bouncycastle.cms.CMSException;
+import org.bouncycastle.cms.CMSProcessableByteArray;
+import org.bouncycastle.cms.CMSSignedData;
+import org.bouncycastle.cms.CMSSignedDataGenerator;
 import org.bouncycastle.cms.jcajce.JcaSimpleSignerInfoGeneratorBuilder;
-import org.bouncycastle.cms.jcajce.JceCMSContentEncryptorBuilder;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.operator.OperatorCreationException;
-import org.bouncycastle.operator.OutputEncryptor;
 
 import javax.xml.bind.DatatypeConverter;
 import java.io.File;
@@ -63,7 +64,6 @@ public class Main {
         barcode.setMessageEncoding("iso-8859-1");
         pass.setBarcodes(Collections.singletonList(barcode));
         pass.setBarcode(barcode);
-        pass.setIgnoresTimeZone(false);
 
         GenericPass generic = new GenericPass();
         Map<String, Object> primaryField = new HashMap<>();
@@ -73,7 +73,7 @@ public class Main {
         pass.setGeneric(generic);
 
         File passJson = new File(passFolder.getAbsolutePath() + File.separator + "pass.json");
-        jsonMapper.writerWithDefaultPrettyPrinter().writeValue(new FileOutputStream(passJson), pass);
+        jsonMapper.writeValue(new FileOutputStream(passJson), pass);
 
         // Create the manifest.json
         Map<String, String> manifest = new HashMap<>();
@@ -82,7 +82,7 @@ public class Main {
         }
 
         File manifestJson = new File(passFolder.getAbsolutePath() + File.separator + "manifest.json");
-        jsonMapper.writerWithDefaultPrettyPrinter().writeValue(new FileOutputStream(manifestJson), manifest);
+        jsonMapper.writeValue(new FileOutputStream(manifestJson), manifest);
 
         // Create the signature file
         File signatureFile = new File(passFolder.getAbsolutePath() + File.separator + "signature");
@@ -146,7 +146,6 @@ public class Main {
         dataGenerator.addCertificates(new JcaCertStore(Arrays.asList(intermediateCertificate, signingCertificate)));
 
         CMSProcessableByteArray typedData = new CMSProcessableByteArray(IOUtils.toByteArray(new FileInputStream(manifestFile)));
-
         CMSSignedData data = dataGenerator.generate(typedData);
         return data.getEncoded();
     }
