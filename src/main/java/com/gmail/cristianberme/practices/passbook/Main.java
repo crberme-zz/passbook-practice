@@ -2,7 +2,6 @@ package com.gmail.cristianberme.practices.passbook;
 
 import com.ryantenney.passkit4j.Pass;
 import com.ryantenney.passkit4j.PassResource;
-import com.ryantenney.passkit4j.PassSerializationException;
 import com.ryantenney.passkit4j.PassSerializer;
 import com.ryantenney.passkit4j.model.Barcode;
 import com.ryantenney.passkit4j.model.BarcodeFormat;
@@ -12,7 +11,10 @@ import com.ryantenney.passkit4j.sign.PassSigner;
 import com.ryantenney.passkit4j.sign.PassSignerImpl;
 import com.ryantenney.passkit4j.sign.PassSigningException;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
@@ -52,14 +54,18 @@ public class Main {
                         new PassResource("src/main/resources/icon.png")
                 );
 
-        String password = properties.getProperty("keystore.password");
         // Copy the .p12 file generated from the pass type ID certificate in the resources folder as "keystore.p12"
         // Also copy the certificate itself as "pass.cer"
+        CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+        X509Certificate signingCertificate = (X509Certificate) certificateFactory.generateCertificate(new FileInputStream("src/main/resources/pass.cer"));
+        X509Certificate intermediateCertificate = (X509Certificate) certificateFactory.generateCertificate(new URL("https://developer.apple.com/certificationauthority/AppleWWDRCA.cer").openStream());
+
         // The following code implies that the keystore and the private key share the same password
         // If that's not the case change the following instructions accordingly
+        String password = properties.getProperty("keystore.password");
         PassSigner signer = PassSignerImpl.builder()
-                .signingCertificate((X509Certificate) CertificateFactory.getInstance("X.509").generateCertificate(new FileInputStream("src/main/resources/pass.cer")))
-                .intermediateCertificate(new URL("https://developer.apple.com/certificationauthority/AppleWWDRCA.cer").openStream())
+                .signingCertificate(signingCertificate)
+                .intermediateCertificate(intermediateCertificate)
                 .keystore(new FileInputStream("src/main/resources/keystore.p12"), password)
                 .password(password)
                 .build();
