@@ -1,22 +1,23 @@
 package com.gmail.cristianberme.practices.passbook.models;
 
+import java.util.List;
 import java.util.Map;
 
 public class PassStyle {
-    Map<String, Object> primaryFields;
+    List<Map<String, Object>> primaryFields;
 
-    public PassStyle(Map<String, Object> primaryFields) {
+    public PassStyle(List<Map<String, Object>> primaryFields) {
         this.primaryFields = primaryFields;
     }
 
     public PassStyle() {
     }
 
-    public Map<String, Object> getPrimaryFields() {
+    public List<Map<String, Object>> getPrimaryFields() {
         return primaryFields;
     }
 
-    public void setPrimaryFields(Map<String, Object> primaryFields) {
+    public void setPrimaryFields(List<Map<String, Object>> primaryFields) {
         this.primaryFields = primaryFields;
     }
 }

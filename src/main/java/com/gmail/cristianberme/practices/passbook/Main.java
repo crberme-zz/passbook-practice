@@ -50,7 +50,8 @@ public class Main {
 
         // Create the pass.json file
         Pass pass = new Pass();
-        pass.setPassTypeIdentifier("pass.passTypeIdentifier");
+        pass.setFormatVersion(1);
+        pass.setPassTypeIdentifier(properties.getProperty("pass.passTypeIdentifier"));
         pass.setSerialNumber(serialNumber);
         pass.setTeamIdentifier(properties.getProperty("pass.teamIdentifier"));
         pass.setDescription("Passbook practice");
@@ -64,9 +65,10 @@ public class Main {
         pass.setBarcode(barcode);
 
         GenericPass generic = new GenericPass();
-        Map<String, Object> primaryFields = new HashMap<>();
-        primaryFields.put("Pass serial number", serialNumber);
-        generic.setPrimaryFields(primaryFields);
+        Map<String, Object> primaryField = new HashMap<>();
+        primaryField.put("key", "Pass serial number");
+        primaryField.put("value", serialNumber);
+        generic.setPrimaryFields(Arrays.asList(primaryField));
         pass.setGeneric(generic);
 
         File passJson = new File(passFolder.getAbsolutePath() + File.separator + "pass.json");
