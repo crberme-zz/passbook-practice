@@ -12,8 +12,8 @@ Create the following files in the folder *scr/main/resources*:
     - *pass.teamIdentifier*: The team ID associated with your developer account.
     - *keystore.password*: The password of the provided .p12 file.
 - A 29x29px png image as *icon.png*
-- A .p12 file from the signing certificate and the corresponding private key (See "How to use OpenSSL to create an Apple Pass Type Certificate" in the [Sources](#sources) section for more info).
-- The certificate itself as "pass.cer" (To be removed since it's redundant, but necessary for now)
+- A .p12 file called *keystore.p12*, created from the signing certificate and the corresponding private key (See "How to use OpenSSL to create an Apple Pass Type Certificate" in the [Sources](#sources) section for more info).
+- The certificate itself as *pass.cer* (To be removed since it's redundant, but necessary for now)
 
 The code assumes that the keystore and the private key share the same password. Since this is not always the case, expect it to be changed in future versions.
 
